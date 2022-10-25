@@ -1,10 +1,9 @@
 package email;
 
 import java.io.IOException;
-
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.Email;
-import org.apache.commons.mail.EmailException;
+//import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
 
 import javafx.event.ActionEvent;
@@ -34,10 +33,21 @@ public class Controller {
 	@FXML
 	private Button enviarButton, vaciarButton, cerrarButton;
 
+	private Model model = new Model();
+
 	public Controller() throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/View.fxml"));
 		loader.setController(this);
 		loader.load();
+
+		servidorText.textProperty().bindBidirectional(model.servidorProperty());
+		puertoServidorText.textProperty().bindBidirectional(model.puertoProperty());
+		emailRemitenteText.textProperty().bindBidirectional(model.remitenteProperty());
+		remitentePass.textProperty().bindBidirectional(model.contraseñaProperty());
+		emailDestinatarioText.textProperty().bindBidirectional(model.destinatarioProperty());
+		asuntoText.textProperty().bindBidirectional(model.asuntoProperty());
+		mensajeText.textProperty().bindBidirectional(model.mensajeProperty());
+		sslCheck.selectedProperty().bindBidirectional(model.sslProperty());
 	}
 
 	@FXML
@@ -45,14 +55,14 @@ public class Controller {
 		Alert alert;
 		try {
 			Email email = new SimpleEmail();
-			email.setHostName(servidorText.getText());
-			email.setSmtpPort(Integer.parseInt(puertoServidorText.getText()));
-			email.setSSLOnConnect(sslCheck.isSelected());
-			email.setFrom(emailRemitenteText.getText());
-			email.setAuthenticator(new DefaultAuthenticator(emailRemitenteText.getText(), remitentePass.getText()));
-			email.addTo(emailDestinatarioText.getText());
-			email.setSubject(asuntoText.getText());
-			email.setMsg(mensajeText.getText());
+			email.setHostName(model.getServidor());
+			email.setSmtpPort(Integer.parseInt(model.getPuerto()));
+			email.setSSLOnConnect(model.isSsl());
+			email.setFrom(model.getRemitente());
+			email.setAuthenticator(new DefaultAuthenticator(model.getRemitente(), model.getContraseña()));
+			email.addTo(model.getDestinatario());
+			email.setSubject(model.getAsunto());
+			email.setMsg(model.getMensaje());
 			email.send();
 
 			alert = new Alert(AlertType.INFORMATION);
@@ -70,14 +80,14 @@ public class Controller {
 
 	@FXML
 	private void onVaciarAction(ActionEvent e) {
-		servidorText.setText(null);
-		puertoServidorText.setText(null);
-		sslCheck.setSelected(false);
-		emailRemitenteText.setText(null);
-		remitentePass.setText(null);
-		emailDestinatarioText.setText(null);
-		asuntoText.setText(null);
-		mensajeText.setText(null);
+		model.setServidor(null);
+		model.setPuerto(null);
+		model.setSsl(false);
+		model.setRemitente(null);
+		model.setContraseña(null);
+		model.setDestinatario(null);
+		model.setAsunto(null);
+		model.setMensaje(null);
 	}
 
 	@FXML
