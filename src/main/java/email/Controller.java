@@ -1,6 +1,9 @@
 package email;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.Email;
 //import org.apache.commons.mail.EmailException;
@@ -9,6 +12,7 @@ import org.apache.commons.mail.SimpleEmail;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -18,7 +22,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
 
-public class Controller {
+public class Controller implements Initializable{
 
 	@FXML
 	private GridPane view;
@@ -39,7 +43,9 @@ public class Controller {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/View.fxml"));
 		loader.setController(this);
 		loader.load();
-
+	}
+	
+	public void initialize(URL location, ResourceBundle resources) {
 		servidorText.textProperty().bindBidirectional(model.servidorProperty());
 		puertoServidorText.textProperty().bindBidirectional(model.puertoProperty());
 		emailRemitenteText.textProperty().bindBidirectional(model.remitenteProperty());
